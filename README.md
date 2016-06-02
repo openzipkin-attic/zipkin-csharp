@@ -15,7 +15,7 @@ var span = new Span(traceId, new IPEndPoint(serviceIp, servicePort), "test-servi
 
 span.Record(Annotations.ServerReceive(DateTime.UtcNow));
 // ... handle a RPC request
-span.Record(Annotations.ClientReceive(DateTime.UtcNow));
+span.Record(Annotations.ServerSend(DateTime.UtcNow));
 
 // send data to to zipkin
 var succeed = await collector.CollectAsync(span);
