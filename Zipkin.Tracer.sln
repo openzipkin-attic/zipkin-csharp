@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zipkin.Tracer.Kafka", "src\Zipkin.Tracer.Kafka\Zipkin.Tracer.Kafka.csproj", "{BB1C4B54-9638-40CB-A785-6228B391E621}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{BAFFCFD1-84EF-4896-A28C-EB97500F5224}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAFFCFD1-84EF-4896-A28C-EB97500F5224}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAFFCFD1-84EF-4896-A28C-EB97500F5224}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB1C4B54-9638-40CB-A785-6228B391E621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB1C4B54-9638-40CB-A785-6228B391E621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB1C4B54-9638-40CB-A785-6228B391E621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB1C4B54-9638-40CB-A785-6228B391E621}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,5 +59,6 @@ Global
 		{4BB262E2-3927-4E75-952A-F0CF8DDB36B9} = {8A723099-C10E-4B5B-B8D4-682CB255D8ED}
 		{7D03BA73-ECC3-4295-9740-7B8E00552341} = {CE742124-A835-4B08-A7B6-7B1550C8215F}
 		{BAFFCFD1-84EF-4896-A28C-EB97500F5224} = {D0018292-24A5-4200-B74D-2652C5C4FB57}
+		{BB1C4B54-9638-40CB-A785-6228B391E621} = {8A723099-C10E-4B5B-B8D4-682CB255D8ED}
 	EndGlobalSection
 EndGlobal

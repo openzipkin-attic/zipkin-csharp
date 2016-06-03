@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7D03BA73-ECC3-4295-9740-7B8E00552341}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{BB1C4B54-9638-40CB-A785-6228B391E621}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ZipkinExample</RootNamespace>
-    <AssemblyName>ZipkinExample</AssemblyName>
+    <RootNamespace>Zipkin.Tracer.Kafka</RootNamespace>
+    <AssemblyName>Zipkin.Tracer.Kafka</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="kafka-net, Version=0.9.0.65, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\kafka-net.0.9.0.65\lib\net45\kafka-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,21 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="KafkaCollector.cs" />
+    <Compile Include="KafkaSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Zipkin.Tracer.Kafka\Zipkin.Tracer.Kafka.csproj">
-      <Project>{bb1c4b54-9638-40cb-a785-6228b391e621}</Project>
-      <Name>Zipkin.Tracer.Kafka</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Zipkin.Tracer\Zipkin.Tracer.csproj">
+    <ProjectReference Include="..\Zipkin.Tracer\Zipkin.Tracer.csproj">
       <Project>{4bb262e2-3927-4e75-952a-f0cf8ddb36b9}</Project>
       <Name>Zipkin.Tracer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

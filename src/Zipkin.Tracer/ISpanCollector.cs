@@ -9,9 +9,8 @@ namespace Zipkin
     public interface ISpanCollector
     {
         /// <summary>
-        /// Asynchronously sends a series of <see cref="Span"/>s and
-        /// eventually returns a flag determining if they were received successfully.
+        /// Asynchronously sends a series of <see cref="Span"/>s to Zipkin receiver.
         /// </summary>
-        Task<bool> CollectAsync(params Span[] spans);
+        Task CollectAsync(params Span[] spans);
     }
 }

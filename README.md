@@ -2,13 +2,15 @@
 
 A minimalistic .NET client library for Twitter [Zipkin](http://zipkin.io/) tracing.
 
-It provides a handy set of Zipkin primitives such as spans, annotations, binary annotations to Zipkin receiver through chosen protocol, using Thrift encoding for efficiency. *For now only HTTP is available, Kafka support is planned.*
+It provides a handy set of Zipkin primitives such as spans, annotations, binary annotations to Zipkin receiver through chosen protocol (HTTP or Kafka), using Thrift encoding for efficiency.
 
 It does **NOT** keep any kind of logical trace context for you. This way it avoids any dependencies on things like HttpContext or building complex abstractions. It also does **NOT** try to introduce any retry or failure handling policies. All of this + extremely small API makes it a great choice as low level library to be used by custom higher level plugins.
 
 ## Example
 
 ```csharp
+var collector = new HttpCollector(new Uri("http://localhost:9411/"));
+
 // create a span
 var trace = new TraceHeader(traceId: (ulong)random.Next(), spanId: (ulong)random.Next());
 var span = new Span(traceId, new IPEndPoint(serviceIp, servicePort), "test-service");
@@ -27,12 +29,13 @@ var succeed = await collector.CollectAsync(span);
 
 An interface used to communicate with one of the Zipkin span receivers.
 
-- `Task<bool> CollectAsync(params Span[] spans)` - Asynchronously sends a series of spans and eventually returns a flag determining if they were received successfully.
+- `Task CollectAsync(params Span[] spans)` - Asynchronously sends a series of spans. May throw `ZipkinCollectorException` when spans delivery failed.
 
 Span collector has following implementations:
 
 - `HttpCollector` - A collector sending all data to zipkin endpoint using HTTP protocol. Spans are encoded using Thrift encoding.
 - `DebugCollector` - Debug collector used for printing spans into provided output.
+- `KafkaCollector` (Zipkin.Tracer.Kafka library) - A collector sending all data to zipkin through kafka producer.
 
 #### `Span`
 

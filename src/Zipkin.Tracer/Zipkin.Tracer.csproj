@@ -53,12 +53,14 @@
     <Compile Include="Thrift\BinaryAnnotation.cs" />
     <Compile Include="Thrift\Endpoint.cs" />
     <Compile Include="Thrift\Span.cs" />
+    <Compile Include="Thrift\ThriftSpanSerializer.cs" />
     <Compile Include="Thrift\ThriftExtensions.cs" />
     <Compile Include="Span.cs" />
     <Compile Include="ISpanCollector.cs" />
     <Compile Include="HttpCollector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TraceHeader.cs" />
+    <Compile Include="ZipkinCollectorException.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

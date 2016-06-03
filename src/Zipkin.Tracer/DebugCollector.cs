@@ -21,13 +21,12 @@ namespace Zipkin
         {
         }
 
-        public async Task<bool> CollectAsync(params Span[] spans)
+        public async Task CollectAsync(params Span[] spans)
         {
             foreach (var span in spans)
                 _writer.WriteLine(span.ToString());
 
             _writer.Flush();
-            return true;
         }
     }
 }
