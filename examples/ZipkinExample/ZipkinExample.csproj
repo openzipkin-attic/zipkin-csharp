@@ -49,6 +49,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Zipkin.Tracer.Kafka\Zipkin.Tracer.Kafka.csproj">
+      <Project>{bb1c4b54-9638-40cb-a785-6228b391e621}</Project>
+      <Name>Zipkin.Tracer.Kafka</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Zipkin.Tracer\Zipkin.Tracer.csproj">
       <Project>{4bb262e2-3927-4e75-952a-f0cf8ddb36b9}</Project>
       <Name>Zipkin.Tracer</Name>
