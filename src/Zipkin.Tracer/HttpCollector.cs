@@ -18,46 +18,41 @@ namespace Zipkin
 
         public HttpCollector(Uri url)
         {
+            if (!url.IsAbsoluteUri)
+                throw new ArgumentException($"URI '{url}' should be an absolute URI path to zipkin server");
+
+            if (url.PathAndQuery == "/")
+                url = new Uri(url, "api/v1/spans");
+
             _url = url;
         }
 
-        public HttpCollector() : this(new Uri("http://localhost:9411/api/v1/spans"))
+        public HttpCollector() : this(new Uri("http://localhost:9411/"))
         {
         }
 
-        public async Task<bool> CollectAsync(params Span[] spans)
+        public async Task CollectAsync(params Span[] spans)
         {
-            var serialized = SerializeSpans(spans);
-
             var request = WebRequest.CreateHttp(_url);
             request.Method = "POST";
             request.ContentType = "application/x-thrift";
-            request.ContentLength = serialized.Length;
-            File.WriteAllBytes("ok", serialized);
-            using (var stream = await request.GetRequestStreamAsync())
+
+            using (var output = new MemoryStream())
             {
-                await stream.WriteAsync(serialized, 0, serialized.Length);
-                await stream.FlushAsync();
+                ThriftSpanSerializer.WriteSpans(spans, output);
+                output.Position = 0;
+                request.ContentLength = output.Length;
+                using (var stream = await request.GetRequestStreamAsync())
+                {
+                    await output.CopyToAsync(stream);
+                    await stream.FlushAsync();
+                }
             }
+
             using (var reply = (HttpWebResponse)await request.GetResponseAsync())
             {
-                return reply.StatusCode == HttpStatusCode.Accepted;
-            }
-        }
-
-        private static byte[] SerializeSpans(Span[] spans)
-        {
-            using (var buffer = new TMemoryBuffer())
-            using (var protocol = new TBinaryProtocol(buffer))
-            {
-                protocol.WriteListBegin(new TList(TType.Struct, spans.Length));
-                foreach (var span in spans)
-                {
-                    var thrift = span.ToThrift();
-                    thrift.Write(protocol);
-                }
-                protocol.WriteListEnd();
-                return buffer.GetBuffer();
+                if (reply.StatusCode != HttpStatusCode.Accepted)
+                    throw new ZipkinCollectorException($"Zipkin HTTP receiver responded with status code {reply.StatusCode}");
             }
         }
     }

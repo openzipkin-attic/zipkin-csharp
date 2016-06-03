@@ -9,6 +9,8 @@ It does **NOT** keep any kind of logical trace context for you. This way it avoi
 ## Example
 
 ```csharp
+var collector = new HttpCollector(new Uri("http://localhost:9411/"));
+
 // create a span
 var trace = new TraceHeader(traceId: (ulong)random.Next(), spanId: (ulong)random.Next());
 var span = new Span(traceId, new IPEndPoint(serviceIp, servicePort), "test-service");
@@ -27,7 +29,7 @@ var succeed = await collector.CollectAsync(span);
 
 An interface used to communicate with one of the Zipkin span receivers.
 
-- `Task<bool> CollectAsync(params Span[] spans)` - Asynchronously sends a series of spans and eventually returns a flag determining if they were received successfully.
+- `Task CollectAsync(params Span[] spans)` - Asynchronously sends a series of spans. May throw `ZipkinCollectorException` when spans delivery failed.
 
 Span collector has following implementations:
 
