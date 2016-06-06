@@ -13,14 +13,14 @@ var collector = new HttpCollector(new Uri("http://localhost:9411/"));
 
 // create a span
 var trace = new TraceHeader(traceId: (ulong)random.Next(), spanId: (ulong)random.Next());
-var span = new Span(traceId, new IPEndPoint(serviceIp, servicePort), "test-service");
+var span = new Span(trace, new IPEndPoint(serviceIp, servicePort), "test-service");
 
 span.Record(Annotations.ServerReceive(DateTime.UtcNow));
 // ... handle a RPC request
 span.Record(Annotations.ServerSend(DateTime.UtcNow));
 
 // send data to to zipkin
-var succeed = await collector.CollectAsync(span);
+await collector.CollectAsync(span);
 ```
 
 ## API

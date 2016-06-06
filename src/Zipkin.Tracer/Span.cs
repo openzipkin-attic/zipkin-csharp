@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Span.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Threading;
 
 namespace Zipkin
 {

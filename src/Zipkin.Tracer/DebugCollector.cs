@@ -1,4 +1,10 @@
-﻿using System.IO;
+﻿//-----------------------------------------------------------------------
+// <copyright file="DebugCollector.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Zipkin
