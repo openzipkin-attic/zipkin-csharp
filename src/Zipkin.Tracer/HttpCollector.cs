@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="HttpCollector.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;

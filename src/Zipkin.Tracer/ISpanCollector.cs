@@ -1,4 +1,9 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ISpanCollector.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
 using System.Threading.Tasks;
 
 namespace Zipkin

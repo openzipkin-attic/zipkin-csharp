@@ -1,5 +1,10 @@
-﻿using System;
-using System.CodeDom;
+﻿//-----------------------------------------------------------------------
+// <copyright file="SpanTest.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Net;
 using Xunit;
 using Zipkin.Thrift;

@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ZipkinCollectorException.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Runtime.Serialization;
 
 namespace Zipkin

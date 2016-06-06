@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="KafkaSettings.cs" company="Bazinga Technologies Inc.">
+//     Copyright (C) 2016 Bazinga Technologies Inc.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Linq;
 
 namespace Zipkin.Tracer.Kafka
