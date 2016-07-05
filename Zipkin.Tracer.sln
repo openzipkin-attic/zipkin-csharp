@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thrift", "thrift", "{EB1ABC99-0CB6-4E8E-A9FF-23E8A8ECC92A}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,9 +25,22 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{619760EE-68EE-4392-AA46-B94FEC6B79C9}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zipkin.Tracer.Kafka", "src\Zipkin.Tracer.Kafka\Zipkin.Tracer.Kafka.csproj", "{BB1C4B54-9638-40CB-A785-6228B391E621}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{3A5EEDCE-5B00-406F-A904-10C71E8ABCBD}"
+	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+		build.fsx = build.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zipkin", "zipkin", "{1050EEEC-F214-4C7B-A6F4-B4EC14F04078}"
+	ProjectSection(SolutionItems) = preProject
+		tools\zipkin\run.bat = tools\zipkin\run.bat
+		tools\zipkin\zipkin-server-0.18.2-exec.jar = tools\zipkin\zipkin-server-0.18.2-exec.jar
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,9 +69,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{EB1ABC99-0CB6-4E8E-A9FF-23E8A8ECC92A} = {3A5EEDCE-5B00-406F-A904-10C71E8ABCBD}
 		{4BB262E2-3927-4E75-952A-F0CF8DDB36B9} = {8A723099-C10E-4B5B-B8D4-682CB255D8ED}
 		{7D03BA73-ECC3-4295-9740-7B8E00552341} = {CE742124-A835-4B08-A7B6-7B1550C8215F}
 		{BAFFCFD1-84EF-4896-A28C-EB97500F5224} = {D0018292-24A5-4200-B74D-2652C5C4FB57}
 		{BB1C4B54-9638-40CB-A785-6228B391E621} = {8A723099-C10E-4B5B-B8D4-682CB255D8ED}
+		{1050EEEC-F214-4C7B-A6F4-B4EC14F04078} = {3A5EEDCE-5B00-406F-A904-10C71E8ABCBD}
 	EndGlobalSection
 EndGlobal
