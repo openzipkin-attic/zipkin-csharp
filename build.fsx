@@ -70,6 +70,18 @@ Target "CopyBinaries" (fun _ ->
 )
 
 // --------------------------------------------------------------------------------------
+// Restore Packages
+
+Target "RestorePackages" (fun _ ->
+    let nugetExe = NuGetHelper.NuGetDefaults().ToolPath
+    let nugetCmd = "restore"
+    let result = ExecProcess (fun info -> 
+        info.FileName <- nugetExe
+        info.Arguments <- nugetCmd)(TimeSpan.FromSeconds 10.0)
+    printfn "Restored packages."
+)
+
+// --------------------------------------------------------------------------------------
 // Clean build results
 
 Target "Clean" (fun _ ->
@@ -170,6 +182,7 @@ Target "BuildPackage" DoNothing
 Target "All" DoNothing
 
 "Clean"
+  ==> "RestorePackages"
   ==> "AssemblyInfo"
   ==> "Build"
   ==> "CopyBinaries"
