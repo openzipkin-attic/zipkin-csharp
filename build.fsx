@@ -17,7 +17,7 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 let gitOwner = "bazingatechnologies" 
 let gitHome = "https://github.com/" + gitOwner
 let gitName = "Zipkin.Tracer"
-let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/bazingatechnologies"
+let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/openzipkin"
 
 let binDir = currentDirectory @@ "bin"
 
@@ -67,6 +67,18 @@ Target "CopyBinaries" (fun _ ->
     !! "src/**/*.??proj"
     |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) @@ "bin/Release", "bin" @@ (System.IO.Path.GetFileNameWithoutExtension f)))
     |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
+)
+
+// --------------------------------------------------------------------------------------
+// Restore Packages
+
+Target "RestorePackages" (fun _ ->
+    let nugetExe = NuGetHelper.NuGetDefaults().ToolPath
+    let nugetCmd = "restore"
+    let result = ExecProcess (fun info -> 
+        info.FileName <- nugetExe
+        info.Arguments <- nugetCmd)(TimeSpan.FromSeconds 10.0)
+    printfn "Restored packages."
 )
 
 // --------------------------------------------------------------------------------------
@@ -170,6 +182,7 @@ Target "BuildPackage" DoNothing
 Target "All" DoNothing
 
 "Clean"
+  ==> "RestorePackages"
   ==> "AssemblyInfo"
   ==> "Build"
   ==> "CopyBinaries"
