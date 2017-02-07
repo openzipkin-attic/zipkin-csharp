@@ -17,7 +17,7 @@ let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
 let gitOwner = "bazingatechnologies" 
 let gitHome = "https://github.com/" + gitOwner
 let gitName = "Zipkin.Tracer"
-let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/bazingatechnologies"
+let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/openzipkin"
 
 let binDir = currentDirectory @@ "bin"
 
