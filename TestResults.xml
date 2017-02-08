@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <assemblies>
-  <assembly name="D:\projects\dev\contrib\Zipkin.Tracer\tests\Zipkin.Tracer.Tests\bin\Release\Zipkin.Tracer.Tests.DLL" environment="64-bit .NET 4.0.30319.42000 [collection-per-class, non-parallel]" test-framework="xUnit.net 2.0.0.2929" run-date="2016-07-05" run-time="16:28:54" config-file="D:\projects\dev\contrib\Zipkin.Tracer\packages\xunit.runner.console\tools\xunit.console.exe.Config" total="2" passed="2" failed="0" skipped="0" time="0.289" errors="0">
+  <assembly name="C:\Users\aliostad\GitHub\zipkin-csharp\tests\Zipkin.Tracer.Tests\bin\Release\Zipkin.Tracer.Tests.DLL" environment="64-bit .NET 4.0.30319.42000 [collection-per-class, non-parallel]" test-framework="xUnit.net 2.0.0.2929" run-date="2017-02-07" run-time="22:17:03" config-file="C:\Users\aliostad\GitHub\zipkin-csharp\packages\xunit.runner.console\tools\xunit.console.exe.Config" total="2" passed="2" failed="0" skipped="0" time="0.393" errors="0">
     <errors />
-    <collection total="1" passed="1" failed="0" skipped="0" name="Test collection for Zipkin.Tracer.Tests.SpanTest" time="0.128">
-      <test name="Zipkin.Tracer.Tests.SpanTest.Span_should_serialize_properly" type="Zipkin.Tracer.Tests.SpanTest" method="Span_should_serialize_properly" time="0.1281042" result="Pass" />
+    <collection total="1" passed="1" failed="0" skipped="0" name="Test collection for Zipkin.Tracer.Tests.SpanTest" time="0.042">
+      <test name="Zipkin.Tracer.Tests.SpanTest.Span_should_serialize_properly" type="Zipkin.Tracer.Tests.SpanTest" method="Span_should_serialize_properly" time="0.041906" result="Pass" />
     </collection>
-    <collection total="1" passed="1" failed="0" skipped="0" name="Test collection for Zipkin.Tracer.Tests.AnnotationTest" time="0.010">
-      <test name="Zipkin.Tracer.Tests.AnnotationTest.Annotation_should_serialize_properly" type="Zipkin.Tracer.Tests.AnnotationTest" method="Annotation_should_serialize_properly" time="0.010286" result="Pass" />
+    <collection total="1" passed="1" failed="0" skipped="0" name="Test collection for Zipkin.Tracer.Tests.AnnotationTest" time="0.094">
+      <test name="Zipkin.Tracer.Tests.AnnotationTest.Annotation_should_serialize_properly" type="Zipkin.Tracer.Tests.AnnotationTest" method="Annotation_should_serialize_properly" time="0.093845" result="Pass" />
     </collection>
   </assembly>
 </assemblies>
