@@ -10,14 +10,14 @@ open Fake.ReleaseNotesHelper
 open System
 open System.IO
 
-let project = "Zipkin.Tracer"
+let project = "Zipkin"
 let summary = "A minimalistic .NET client library for Twitter Zipkin tracing."
-let solutionFile  = "Zipkin.Tracer.sln"
+let solutionFile  = "Zipkin.sln"
 let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
-let gitOwner = "bazingatechnologies" 
+let gitOwner = "openzipkin" 
 let gitHome = "https://github.com/" + gitOwner
-let gitName = "Zipkin.Tracer"
-let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/bazingatechnologies"
+let gitName = "Zipkin-csharp"
+let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/openzipkin"
 
 let binDir = currentDirectory @@ "bin"
 
@@ -32,33 +32,7 @@ let (|Fsproj|Csproj|Vbproj|) (projFileName:string) =
     | f when f.EndsWith("vbproj") -> Vbproj
     | _                           -> failwith (sprintf "Project file %s not supported. Unknown project type." projFileName)
 
-// Generate assembly info files with the right version & up-to-date information
-Target "AssemblyInfo" (fun _ ->
-    let getAssemblyInfoAttributes projectName =
-        [ Attribute.Title (projectName)
-          Attribute.Product project
-          Attribute.Description summary
-          Attribute.Version release.AssemblyVersion
-          Attribute.FileVersion release.AssemblyVersion
-          Attribute.InternalsVisibleTo "Zipkin.Tracer.Tests" ]
 
-    let getProjectDetails projectPath =
-        let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
-        ( projectPath, 
-          projectName,
-          System.IO.Path.GetDirectoryName(projectPath),
-          (getAssemblyInfoAttributes projectName)
-        )
-
-    !! "src/**/*.??proj"
-    |> Seq.map getProjectDetails
-    |> Seq.iter (fun (projFileName, projectName, folderName, attributes) ->
-        match projFileName with
-        | Fsproj -> CreateFSharpAssemblyInfo (folderName @@ "AssemblyInfo.fs") attributes
-        | Csproj -> CreateCSharpAssemblyInfo ((folderName @@ "Properties") @@ "AssemblyInfo.cs") attributes
-        | Vbproj -> CreateVisualBasicAssemblyInfo ((folderName @@ "My Project") @@ "AssemblyInfo.vb") attributes
-        )
-)
 
 // Copies binaries from default VS location to expected bin folder
 // But keeps a subdirectory structure for each project in the 
@@ -67,6 +41,18 @@ Target "CopyBinaries" (fun _ ->
     !! "src/**/*.??proj"
     |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) @@ "bin/Release", "bin" @@ (System.IO.Path.GetFileNameWithoutExtension f)))
     |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
+)
+
+// --------------------------------------------------------------------------------------
+// Restore Packages
+
+Target "RestorePackages" (fun _ ->
+    let nugetExe = NuGetHelper.NuGetDefaults().ToolPath
+    let nugetCmd = "restore"
+    let result = ExecProcess (fun info -> 
+        info.FileName <- nugetExe
+        info.Arguments <- nugetCmd)(TimeSpan.FromSeconds 10.0)
+    printfn "Restored packages."
 )
 
 // --------------------------------------------------------------------------------------
@@ -116,7 +102,7 @@ Target "NuGet" (fun _ ->
         NuGetHelper.NuGetPack
             (fun p ->
                 { p with
-                    Copyright = "Bazinga Technologies Inc."
+                    Copyright = "OpenZipkin Developers"
                     Project =  project
                     Properties = ["Configuration", "Release"]
                     ReleaseNotes = release.Notes |> String.concat "\n"
@@ -125,7 +111,7 @@ Target "NuGet" (fun _ ->
                     OutputPath = buildDir                    
                     WorkingDir = dir
                     Dependencies = dependencies })
-            nuspec)
+            (nuspec.Replace(".nuspec", ".csproj")))
 )
 
 Target "PublishNuget" (fun _ ->
@@ -170,7 +156,7 @@ Target "BuildPackage" DoNothing
 Target "All" DoNothing
 
 "Clean"
-  ==> "AssemblyInfo"
+  ==> "RestorePackages"
   ==> "Build"
   ==> "CopyBinaries"
   ==> "RunTests"

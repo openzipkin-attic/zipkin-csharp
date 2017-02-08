@@ -7,8 +7,8 @@
     <ProjectGuid>{BB1C4B54-9638-40CB-A785-6228B391E621}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zipkin.Tracer.Kafka</RootNamespace>
-    <AssemblyName>Zipkin.Tracer.Kafka</AssemblyName>
+    <RootNamespace>Zipkin.Collector.Kafka</RootNamespace>
+    <AssemblyName>Zipkin.Collector.Kafka</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="KafkaCollector.cs" />
     <Compile Include="KafkaSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Zipkin.Tracer.Kafka.nuspec" />
+    <None Include="Zipkin.Collector.Kafka.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
