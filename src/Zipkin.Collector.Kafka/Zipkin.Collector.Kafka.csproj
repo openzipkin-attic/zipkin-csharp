@@ -49,9 +49,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Zipkin.Tracer\Zipkin.Tracer.csproj">
+    <ProjectReference Include="..\Zipkin.Core\Zipkin.Core.csproj">
       <Project>{4bb262e2-3927-4e75-952a-f0cf8ddb36b9}</Project>
-      <Name>Zipkin.Tracer</Name>
+      <Name>Zipkin.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
