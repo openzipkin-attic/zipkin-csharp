@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Zipkin.Collector.Kafka</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/openzipkin/zipkin-csharp/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/openzipkin/zipkin-csharp</projectUrl>
+    <description>$title$</description>
+    <summary>$title$</summary>
+    <releaseNotes>Nuget package</releaseNotes>
+    <copyright>Openzipkin 2017</copyright>
+    <tags>zipkin tracing distributed performance</tags>
+    <dependencies>
+      <dependency id="kafka-net" version="0.9.0.65" />
+      <dependency id="Zipkin.Core" version="$version$" />	  
+    </dependencies>
+  </metadata>
+</package>

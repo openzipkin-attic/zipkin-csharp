@@ -8,8 +8,8 @@
     <ProjectGuid>{BAFFCFD1-84EF-4896-A28C-EB97500F5224}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zipkin.Tracer.Tests</RootNamespace>
-    <AssemblyName>Zipkin.Tracer.Tests</AssemblyName>
+    <RootNamespace>Zipkin.Core.Tests</RootNamespace>
+    <AssemblyName>Zipkin.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>

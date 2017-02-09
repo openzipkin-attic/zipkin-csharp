@@ -2,14 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitleAttribute("Zipkin.Tracer.Kafka")]
-[assembly: AssemblyProductAttribute("Zipkin.Tracer")]
+[assembly: AssemblyTitleAttribute("Zipkin.Collector.Kafka")]
+[assembly: AssemblyProductAttribute("Zipkin")]
 [assembly: AssemblyDescriptionAttribute("A minimalistic .NET client library for Twitter Zipkin tracing.")]
-[assembly: AssemblyVersionAttribute("0.1.0")]
-[assembly: AssemblyFileVersionAttribute("0.1.0")]
-[assembly: InternalsVisibleToAttribute("Zipkin.Tracer.Tests")]
-namespace System {
-    internal static class AssemblyVersionInformation {
-        internal const string Version = "0.1.0";
-    }
-}
+[assembly: InternalsVisibleToAttribute("Zipkin.Core.Tests")]

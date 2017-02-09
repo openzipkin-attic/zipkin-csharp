@@ -7,8 +7,8 @@
     <ProjectGuid>{4BB262E2-3927-4E75-952A-F0CF8DDB36B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zipkin.Tracer</RootNamespace>
-    <AssemblyName>Zipkin.Tracer</AssemblyName>
+    <RootNamespace>Zipkin.Core</RootNamespace>
+    <AssemblyName>Zipkin.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,6 +43,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Annotation.cs" />
     <Compile Include="Annotations.cs" />
     <Compile Include="AnnotationType.cs" />
@@ -65,7 +68,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Zipkin.Tracer.nuspec" />
+    <None Include="Zipkin.Core.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
