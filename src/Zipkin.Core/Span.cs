@@ -63,6 +63,11 @@ namespace Zipkin
             Endpoint = endpoint;
         }
 
+        public Span(TraceHeader traceHeader, string serviceName = null)
+            : this(traceHeader, new IPEndPoint(0, 0), serviceName)
+        {
+        }
+
         public Span(ulong traceId, ulong spanId, ulong? parentId = null)
             : this(new TraceHeader(traceId, spanId, parentId, true), new IPEndPoint(0, 0))
         {
