@@ -58,7 +58,10 @@ namespace Zipkin.Thrift
 
         public static Endpoint ToThrift(this IPEndPoint endpoint)
         {
-            return new Endpoint(BitConverter.ToInt32(endpoint.Address.GetAddressBytes(), 0), (short)endpoint.Port, string.Empty);
+            var bytes = endpoint.Address.GetAddressBytes();
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+            return new Endpoint(BitConverter.ToInt32(bytes, 0), (short)endpoint.Port, string.Empty);
         }
     }
 }
