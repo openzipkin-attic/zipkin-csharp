@@ -25,7 +25,7 @@ namespace Zipkin.Thrift
     /// rewriting, like "/api/v1/myresource" vs "/myresource. Via the host field,
     /// you can see the different points of view, which often help in debugging.
     /// </summary>
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
     [Serializable]
 #endif
     internal sealed class BinaryAnnotation : TBase
@@ -111,7 +111,7 @@ namespace Zipkin.Thrift
 
 
         internal Isset __isset;
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
         [Serializable]
 #endif
         internal struct Isset

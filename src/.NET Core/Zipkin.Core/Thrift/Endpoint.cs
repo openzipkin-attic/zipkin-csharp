@@ -19,7 +19,7 @@ namespace Zipkin.Thrift
     /// allows zipkin to display network context of uninstrumented services, or
     /// clients such as web browsers.
     /// </summary>
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
     [Serializable]
 #endif
     internal sealed class Endpoint : TBase
@@ -95,7 +95,7 @@ namespace Zipkin.Thrift
 
 
         internal Isset __isset;
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
         [Serializable]
 #endif
         internal struct Isset

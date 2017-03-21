@@ -16,7 +16,7 @@ namespace Zipkin.Thrift
     /// 
     /// Unlike log statements, annotations are often codes: for example "sr".
     /// </summary>
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
     [Serializable]
 #endif
     internal sealed class Annotation : TBase
@@ -78,7 +78,7 @@ namespace Zipkin.Thrift
 
 
         internal Isset __isset;
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
         [Serializable]
 #endif
         internal struct Isset
