@@ -64,7 +64,7 @@
     <Compile Include="SpanTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Zipkin.Core\Zipkin.Core.csproj">
+    <ProjectReference Include="..\..\src\.NET Classic\Zipkin.Core\Zipkin.Core.csproj">
       <Project>{4bb262e2-3927-4e75-952a-f0cf8ddb36b9}</Project>
       <Name>Zipkin.Core</Name>
     </ProjectReference>
