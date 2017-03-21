@@ -44,11 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\.NET Core\Zipkin.Collector.Kafka\KafkaCollector.cs">
+      <Link>KafkaCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\.NET Core\Zipkin.Collector.Kafka\KafkaSettings.cs">
+      <Link>KafkaSettings.cs</Link>
+    </Compile>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="KafkaCollector.cs" />
-    <Compile Include="KafkaSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
