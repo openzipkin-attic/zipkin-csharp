@@ -8,4 +8,8 @@
     <PackageReference Include="apache-thrift-netcore" Version="0.9.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" Version="1.6.1" />
+  </ItemGroup>
+
 </Project>
