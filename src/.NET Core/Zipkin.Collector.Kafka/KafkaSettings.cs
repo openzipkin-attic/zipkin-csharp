@@ -9,7 +9,9 @@ using System.Linq;
 
 namespace Zipkin.Tracer.Kafka
 {
+#if !NETSTANDARD1_5 && !SILVERLIGHT
     [Serializable]
+#endif
     public sealed class KafkaSettings
     {
         public static KafkaSettings Default => new KafkaSettings("zipkin", 20, 1000, new []{ "http://localhost:9092" });
