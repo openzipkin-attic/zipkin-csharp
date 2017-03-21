@@ -38,7 +38,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Thrift, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ApacheThrift.0.9.3\lib\Thrift.dll</HintPath>
+      <HintPath>..\..\..\packages\ApacheThrift.0.9.3\lib\Thrift.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -101,7 +101,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Zipkin.Core.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
