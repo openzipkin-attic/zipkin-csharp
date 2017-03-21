@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="kafka-core" Version="0.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Zipkin.Core\Zipkin.Core.csproj" />
   </ItemGroup>
 
