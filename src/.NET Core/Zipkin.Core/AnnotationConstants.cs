@@ -9,7 +9,7 @@ namespace Zipkin
 {
     public static class AnnotationConstants
     {
-        internal const int TicksPerMicosecond = 10;
+        public const int TicksPerMicosecond = 10;
 
         /// <summary>
         /// The client sent ("cs") a request to a server. There is only one send per
