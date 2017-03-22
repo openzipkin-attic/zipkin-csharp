@@ -47,7 +47,9 @@ namespace Zipkin
             {
                 ThriftSpanSerializer.WriteSpans(spans, output);
                 output.Position = 0;
+#if !NETSTANDARD1_5 && !SILVERLIGHT
                 request.ContentLength = output.Length;
+#endif
                 using (var stream = await request.GetRequestStreamAsync())
                 {
                     await output.CopyToAsync(stream);

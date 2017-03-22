@@ -10,93 +10,110 @@ using Thrift.Protocol;
 
 namespace Zipkin.Thrift
 {
-
     /// <summary>
-    /// Associates an event that explains latency with a timestamp.
+    /// Indicates the network context of a service recording an annotation with two
+    /// exceptions.
     /// 
-    /// Unlike log statements, annotations are often codes: for example "sr".
+    /// When a BinaryAnnotation, and key is CLIENT_ADDR or SERVER_ADDR,
+    /// the endpoint indicates the source or destination of an RPC. This exception
+    /// allows zipkin to display network context of uninstrumented services, or
+    /// clients such as web browsers.
     /// </summary>
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
     [Serializable]
 #endif
-    internal sealed class Annotation : TBase
+    internal sealed class Endpoint : TBase
     {
-        private long _timestamp;
-        private string _value;
-        private Endpoint _host;
+        private int _ipv4;
+        private short _port;
+        private string _service_name;
 
         /// <summary>
-        /// Microseconds from epoch.
+        /// IPv4 host address packed into 4 bytes.
         /// 
-        /// This value should use the most precise value possible. For example,
-        /// gettimeofday or syncing nanoTime against a tick of currentTimeMillis.
+        /// Ex for the ip 1.2.3.4, it would be (1 << 24) | (2 << 16) | (3 << 8) | 4
         /// </summary>
-        public long Timestamp
+        public int Ipv4
         {
             get
             {
-                return _timestamp;
+                return _ipv4;
             }
             set
             {
-                __isset.timestamp = true;
-                this._timestamp = value;
+                __isset.ipv4 = true;
+                this._ipv4 = value;
             }
         }
 
         /// <summary>
-        /// Usually a short tag indicating an event, like "sr" or "finagle.retry".
+        /// IPv4 port or 0, if unknown.
+        /// 
+        /// Note: this is to be treated as an unsigned integer, so watch for negatives.
         /// </summary>
-        public string Value
+        public short Port
         {
             get
             {
-                return _value;
+                return _port;
             }
             set
             {
-                __isset.@value = true;
-                this._value = value;
+                __isset.port = true;
+                this._port = value;
             }
         }
 
         /// <summary>
-        /// The host that recorded the value, primarily for query by service name.
+        /// Classifier of a source or destination in lowercase, such as "zipkin-web".
+        /// 
+        /// This is the primary parameter for trace lookup, so should be intuitive as
+        /// possible, for example, matching names in service discovery.
+        /// 
+        /// Conventionally, when the service name isn't known, service_name = "unknown".
+        /// However, it is also permissible to set service_name = "" (empty string).
+        /// The difference in the latter usage is that the span will not be queryable
+        /// by service name unless more information is added to the span with non-empty
+        /// service name, e.g. an additional annotation from the server.
+        /// 
+        /// Particularly clients may not have a reliable service name at ingest. One
+        /// approach is to set service_name to "" at ingest, and later assign a
+        /// better label based on binary annotations, such as user agent.
         /// </summary>
-        public Endpoint Host
+        public string ServiceName
         {
             get
             {
-                return _host;
+                return _service_name;
             }
             set
             {
-                __isset.host = true;
-                this._host = value;
+                __isset.service_name = true;
+                this._service_name = value;
             }
         }
 
 
         internal Isset __isset;
-#if !SILVERLIGHT
+#if !NETSTANDARD1_5 &&  !SILVERLIGHT
         [Serializable]
 #endif
         internal struct Isset
         {
-            public bool timestamp;
-            public bool @value;
-            public bool host;
+            public bool ipv4;
+            public bool port;
+            public bool service_name;
         }
 
-        public Annotation()
+        public Endpoint()
         {
         }
 
-        public Annotation(long timestamp, string value, Endpoint host)
+        public Endpoint(int ipv4, short port, string serviceName)
         {
-            Timestamp = timestamp;
-            Value = value;
-            Host = host;
+            Ipv4 = ipv4;
+            Port = port;
+            ServiceName = serviceName;
         }
 
         public void Read(TProtocol iprot)
@@ -116,9 +133,9 @@ namespace Zipkin.Thrift
                     switch (field.ID)
                     {
                         case 1:
-                            if (field.Type == TType.I64)
+                            if (field.Type == TType.I32)
                             {
-                                Timestamp = iprot.ReadI64();
+                                Ipv4 = iprot.ReadI32();
                             }
                             else
                             {
@@ -126,9 +143,9 @@ namespace Zipkin.Thrift
                             }
                             break;
                         case 2:
-                            if (field.Type == TType.String)
+                            if (field.Type == TType.I16)
                             {
-                                Value = iprot.ReadString();
+                                Port = iprot.ReadI16();
                             }
                             else
                             {
@@ -136,10 +153,9 @@ namespace Zipkin.Thrift
                             }
                             break;
                         case 3:
-                            if (field.Type == TType.Struct)
+                            if (field.Type == TType.String)
                             {
-                                Host = new Endpoint();
-                                Host.Read(iprot);
+                                ServiceName = iprot.ReadString();
                             }
                             else
                             {
@@ -165,34 +181,34 @@ namespace Zipkin.Thrift
             oprot.IncrementRecursionDepth();
             try
             {
-                TStruct struc = new TStruct("Annotation");
+                TStruct struc = new TStruct("Endpoint");
                 oprot.WriteStructBegin(struc);
                 TField field = new TField();
-                if (__isset.timestamp)
+                if (__isset.ipv4)
                 {
-                    field.Name = "timestamp";
-                    field.Type = TType.I64;
+                    field.Name = "ipv4";
+                    field.Type = TType.I32;
                     field.ID = 1;
                     oprot.WriteFieldBegin(field);
-                    oprot.WriteI64(Timestamp);
+                    oprot.WriteI32(Ipv4);
                     oprot.WriteFieldEnd();
                 }
-                if (Value != null && __isset.@value)
+                if (__isset.port)
                 {
-                    field.Name = "value";
-                    field.Type = TType.String;
+                    field.Name = "port";
+                    field.Type = TType.I16;
                     field.ID = 2;
                     oprot.WriteFieldBegin(field);
-                    oprot.WriteString(Value);
+                    oprot.WriteI16(Port);
                     oprot.WriteFieldEnd();
                 }
-                if (Host != null && __isset.host)
+                if (ServiceName != null && __isset.service_name)
                 {
-                    field.Name = "host";
-                    field.Type = TType.Struct;
+                    field.Name = "service_name";
+                    field.Type = TType.String;
                     field.ID = 3;
                     oprot.WriteFieldBegin(field);
-                    Host.Write(oprot);
+                    oprot.WriteString(ServiceName);
                     oprot.WriteFieldEnd();
                 }
                 oprot.WriteFieldStop();
@@ -206,28 +222,28 @@ namespace Zipkin.Thrift
 
         public override string ToString()
         {
-            StringBuilder __sb = new StringBuilder("Annotation(");
+            StringBuilder __sb = new StringBuilder("Endpoint(");
             bool __first = true;
-            if (__isset.timestamp)
+            if (__isset.ipv4)
             {
                 if (!__first) { __sb.Append(", "); }
                 __first = false;
-                __sb.Append("Timestamp: ");
-                __sb.Append(Timestamp);
+                __sb.Append("Ipv4: ");
+                __sb.Append(Ipv4);
             }
-            if (Value != null && __isset.@value)
+            if (__isset.port)
             {
                 if (!__first) { __sb.Append(", "); }
                 __first = false;
-                __sb.Append("Value: ");
-                __sb.Append(Value);
+                __sb.Append("Port: ");
+                __sb.Append(Port);
             }
-            if (Host != null && __isset.host)
+            if (ServiceName != null && __isset.service_name)
             {
                 if (!__first) { __sb.Append(", "); }
                 __first = false;
-                __sb.Append("Host: ");
-                __sb.Append(Host == null ? "<null>" : Host.ToString());
+                __sb.Append("Service_name: ");
+                __sb.Append(ServiceName);
             }
             __sb.Append(")");
             return __sb.ToString();

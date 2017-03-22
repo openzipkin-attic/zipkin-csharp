@@ -9,7 +9,9 @@ using System.Runtime.Serialization;
 
 namespace Zipkin
 {
+#if !NETSTANDARD1_5 && !SILVERLIGHT
     [Serializable]
+#endif
     public class ZipkinCollectorException : Exception
     {
         public ZipkinCollectorException()
@@ -24,10 +26,12 @@ namespace Zipkin
         {
         }
 
+#if !NETSTANDARD1_5 && !SILVERLIGHT
         protected ZipkinCollectorException(
             SerializationInfo info,
             StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }
