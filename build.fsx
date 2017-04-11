@@ -1,172 +1,173 @@
-﻿// --------------------------------------------------------------------------------------
-// FAKE build script
-// --------------------------------------------------------------------------------------
+#I @"tools/FAKE/tools"
+#r "FakeLib.dll"
 
-#r @"packages/FAKE/tools/FakeLib.dll"
-open Fake
-open Fake.Git
-open Fake.AssemblyInfoFile
-open Fake.ReleaseNotesHelper
 open System
 open System.IO
+open System.Text
 
-let project = "Zipkin"
-let summary = "A minimalistic .NET client library for Twitter Zipkin tracing."
-let solutionFile  = "Zipkin.sln"
-let testAssemblies = "tests/**/bin/Release/*Tests*.dll"
-let gitOwner = "openzipkin" 
-let gitHome = "https://github.com/" + gitOwner
-let gitName = "Zipkin-csharp"
-let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/openzipkin"
+open Fake
+open Fake.DotNetCli
 
-let binDir = currentDirectory @@ "bin"
+// Variables
+let configuration = "Release"
 
-// Read additional information from the release notes document
-let release = LoadReleaseNotes "RELEASE_NOTES.md"
-
-// Helper active pattern for project types
-let (|Fsproj|Csproj|Vbproj|) (projFileName:string) = 
-    match projFileName with
-    | f when f.EndsWith("fsproj") -> Fsproj
-    | f when f.EndsWith("csproj") -> Csproj
-    | f when f.EndsWith("vbproj") -> Vbproj
-    | _                           -> failwith (sprintf "Project file %s not supported. Unknown project type." projFileName)
-
-
-
-// Copies binaries from default VS location to expected bin folder
-// But keeps a subdirectory structure for each project in the 
-// src folder to support multiple project outputs
-Target "CopyBinaries" (fun _ ->
-    !! "src/**/*.??proj"
-    |>  Seq.map (fun f -> ((System.IO.Path.GetDirectoryName f) @@ "bin/Release", "bin" @@ (System.IO.Path.GetFileNameWithoutExtension f)))
-    |>  Seq.iter (fun (fromDir, toDir) -> CopyDir toDir fromDir (fun _ -> true))
-)
-
-// --------------------------------------------------------------------------------------
-// Restore Packages
-
-Target "RestorePackages" (fun _ ->
-    let nugetExe = NuGetHelper.NuGetDefaults().ToolPath
-    let nugetCmd = "restore"
-    let result = ExecProcess (fun info -> 
-        info.FileName <- nugetExe
-        info.Arguments <- nugetCmd)(TimeSpan.FromSeconds 10.0)
-    printfn "Restored packages."
-)
-
-// --------------------------------------------------------------------------------------
-// Clean build results
+// Directories
+let output = __SOURCE_DIRECTORY__  @@ "bin"
+let outputTests = output @@ "TestResults"
+let outputNuGet = output @@ "nuget"
 
 Target "Clean" (fun _ ->
-    CleanDirs ["bin"; "temp"]
+    CleanDir output
+    CleanDir outputTests
+    CleanDir outputNuGet
+
+    CleanDirs !! "./**/bin"
+    CleanDirs !! "./**/obj"
 )
 
-Target "CleanDocs" (fun _ ->
-    CleanDirs ["docs/output"]
+Target "RestorePackages" (fun _ ->
+    DotNetCli.Restore
+        (fun p -> 
+            { p with
+                Project = "./Zipkin.sln"
+                NoCache = false })
 )
-
-// --------------------------------------------------------------------------------------
-// Build library & test project
 
 Target "Build" (fun _ ->
-    !! solutionFile
-    |> MSBuildRelease "" "Rebuild"
-    |> ignore
-)
+    let projects = !! "./**/*.csproj"
 
-// --------------------------------------------------------------------------------------
-// Run the unit tests using test runner
-open Fake.Testing.XUnit2
-Target "RunTests" (fun _ ->
-    !! testAssemblies
-    |> xUnit2 (fun p ->
-        { p with
-            TimeOut = TimeSpan.FromMinutes 20.
-            XmlOutputPath = Some "TestResults.xml"
-            ToolPath = "packages/xunit.runner.console/tools/xunit.console.exe" })
-)
-
-// --------------------------------------------------------------------------------------
-// Build a NuGet package
-
-Target "NuGet" (fun _ ->
-    !! "src/**/*.nuspec"
-    |> Seq.toArray
-    |> Array.iter (fun nuspec ->
-        let project = Path.GetFileNameWithoutExtension nuspec 
-        let dir = (Path.GetDirectoryName nuspec)
-        let packagesFile = dir @@ "packages.config"
-        let dependencies = NuGetHelper.getDependencies packagesFile
-        let buildDir = binDir @@ project
-        NuGetHelper.NuGetPack
-            (fun p ->
+    let runSingleProject project =
+        DotNetCli.Build
+            (fun p -> 
                 { p with
-                    Copyright = "OpenZipkin Developers"
-                    Project =  project
-                    Properties = ["Configuration", "Release"]
-                    ReleaseNotes = release.Notes |> String.concat "\n"
-                    Version = release.NugetVersion
-                    IncludeReferencedProjects = true
-                    OutputPath = buildDir                    
-                    WorkingDir = dir
-                    Dependencies = dependencies })
-            (nuspec.Replace(".nuspec", ".csproj")))
+                    Project = project
+                    Configuration = configuration })
+
+    projects |> Seq.iter (runSingleProject)
+)
+
+Target "RunTests" (fun _ ->
+    let projects = !! "./**/*.Tests.csproj"
+
+    let runSingleProject project =
+        DotNetCli.Test
+            (fun p -> 
+                { p with
+                    Project = project
+                    Configuration = configuration })
+
+    projects |> Seq.iter (runSingleProject)
+)
+
+//--------------------------------------------------------------------------------
+// Nuget targets 
+//--------------------------------------------------------------------------------
+
+Target "CreateNuget" (fun _ ->
+    let versionSuffix = getBuildParamOrDefault "versionsuffix" ""
+
+    let projects = !! "src/**/Zipkin.Core.csproj"
+                   ++ "src/**/Zipkin.Collector.Kafka.csproj"
+
+    let runSingleProject project =
+        DotNetCli.Pack
+            (fun p -> 
+                { p with
+                    Project = project
+                    Configuration = configuration
+                    AdditionalArgs = ["--include-symbols"]
+                    VersionSuffix = versionSuffix
+                    OutputPath = outputNuGet })
+
+    projects |> Seq.iter (runSingleProject)
 )
 
 Target "PublishNuget" (fun _ ->
-    let rec publishPackage trialsLeft nupkg =
-        let nugetExe = NuGetHelper.NuGetDefaults().ToolPath
-        let key = getBuildParam "key"
-        let url = "https://www.nuget.org/api/v2/package"
-        let nugetCmd = sprintf "push \"%s\" %s -source %s" nupkg key url
-        tracefn "Pushing %s Attempts left: %d" nupkg trialsLeft
-        try 
-            let result = ExecProcess (fun info -> 
-                    info.FileName <- nugetExe
-                    info.WorkingDirectory <- (Path.GetDirectoryName nupkg)
-                    info.Arguments <- nugetCmd) (TimeSpan.FromSeconds 10.0)
-            if result <> 0 then failwithf "Error during NuGet symbol push. %s %s" nugetExe nugetCmd
-        with exn -> 
-            if (trialsLeft > 0) then (publishPackage (trialsLeft-1) nupkg)
-            else raise exn
+    let projects = !! "./build/nuget/*.nupkg" -- "./build/nuget/*.symbols.nupkg"
+    let apiKey = getBuildParamOrDefault "nugetkey" ""
+    let source = getBuildParamOrDefault "nugetpublishurl" ""
+    let symbolSource = getBuildParamOrDefault "symbolspublishurl" ""
 
-    !! "**/*.nupkg"
-    |> Seq.toArray
-    |> Array.iter (publishPackage 5)
+    let runSingleProject project =
+        DotNetCli.RunCommand
+            (fun p -> 
+                { p with 
+                    TimeOut = TimeSpan.FromMinutes 10. })
+            (sprintf "nuget push %s --api-key %s --source %s --symbol-source %s" project apiKey source symbolSource)
+
+    projects |> Seq.iter (runSingleProject)
 )
 
-Target "KeepRunning" (fun _ ->    
-    use watcher = new FileSystemWatcher(DirectoryInfo("docs/content").FullName,"*.*")
-    watcher.EnableRaisingEvents <- true
+//--------------------------------------------------------------------------------
+// Help 
+//--------------------------------------------------------------------------------
 
-    traceImportant "Waiting for help edits. Press any key to stop."
+Target "Help" <| fun _ ->
+    List.iter printfn [
+      "usage:"
+      "/build [target]"
+      ""
+      " Targets for building:"
+      " * Build      Builds"
+      " * Nuget      Create and optionally publish nugets packages"
+      " * RunTests   Runs tests"
+      " * All        Builds, run tests, creates and optionally publish nuget packages"
+      ""
+      " Other Targets"
+      " * Help       Display this help" 
+      ""]
 
-    System.Console.ReadKey() |> ignore
+Target "HelpNuget" <| fun _ ->
+    List.iter printfn [
+      "usage: "
+      "build Nuget [nugetkey=<key> [nugetpublishurl=<url>]] "
+      "            [symbolspublishurl=<url>] "
+      ""
+      "In order to publish a nuget package, keys must be specified."
+      "If a key is not specified the nuget packages will only be created on disk"
+      "After a build you can find them in build/nuget"
+      ""
+      "For pushing nuget packages to nuget.org and symbols to symbolsource.org"
+      "you need to specify nugetkey=<key>"
+      "   build Nuget nugetKey=<key for nuget.org>"
+      ""
+      "For pushing the ordinary nuget packages to another place than nuget.org specify the url"
+      "  nugetkey=<key>  nugetpublishurl=<url>  "
+      ""
+      "For pushing symbols packages specify:"
+      "  symbolskey=<key>  symbolspublishurl=<url> "
+      ""
+      "Examples:"
+      "  build Nuget                      Build nuget packages to the build/nuget folder"
+      ""
+      "  build Nuget versionsuffix=beta1  Build nuget packages with the custom version suffix"
+      ""
+      "  build Nuget nugetkey=123         Build and publish to nuget.org and symbolsource.org"
+      ""
+      "  build Nuget nugetprerelease=dev nugetkey=123 nugetpublishurl=http://abcsymbolspublishurl=http://xyz"
+      ""]
 
-    watcher.EnableRaisingEvents <- false
-    watcher.Dispose()
-)
+//--------------------------------------------------------------------------------
+//  Target dependencies
+//--------------------------------------------------------------------------------
 
-Target "BuildPackage" DoNothing
-
-// --------------------------------------------------------------------------------------
-// Run all targets by default. Invoke 'build <Target>' to override
-
+Target "BuildRelease" DoNothing
 Target "All" DoNothing
+Target "Nuget" DoNothing
 
-"Clean"
-  ==> "RestorePackages"
-  ==> "Build"
-  ==> "CopyBinaries"
-  ==> "RunTests"
-  ==> "All"
+// build dependencies
+"Clean" ==> "RestorePackages" ==> "Build" ==> "BuildRelease"
 
-"All" 
-  ==> "NuGet"
-  ==> "BuildPackage"
+// tests dependencies
+"Clean" ==> "RestorePackages" ==> "Build" ==> "RunTests"
 
-"BuildPackage"
-  ==> "PublishNuget"
+// nuget dependencies
+"Clean" ==> "RestorePackages" ==> "Build" ==> "CreateNuget"
+"CreateNuget" ==> "PublishNuget"
+"PublishNuget" ==> "Nuget"
 
-RunTargetOrDefault "All"
+// all
+"BuildRelease" ==> "All"
+"RunTests" ==> "All"
+
+RunTargetOrDefault "Help"

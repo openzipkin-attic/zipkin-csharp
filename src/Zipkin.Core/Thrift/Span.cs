@@ -25,7 +25,7 @@ namespace Zipkin.Thrift
     /// Span identifiers are packed into i64s, but should be treated opaquely.
     /// String encoding is fixed-width lower-hex, to avoid signed interpretation.
     /// </summary>
-#if !SILVERLIGHT
+#if SERIALIZATION
     [Serializable]
 #endif
     internal sealed class Span : TBase
@@ -222,9 +222,8 @@ namespace Zipkin.Thrift
             }
         }
 
-
         internal Isset __isset;
-#if !SILVERLIGHT
+#if SERIALIZATION
         [Serializable]
 #endif
         internal struct Isset

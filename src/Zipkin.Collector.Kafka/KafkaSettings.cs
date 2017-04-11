@@ -9,7 +9,9 @@ using System.Linq;
 
 namespace Zipkin.Tracer.Kafka
 {
+#if SERIALIZATION
     [Serializable]
+#endif
     public sealed class KafkaSettings
     {
         public static KafkaSettings Default => new KafkaSettings("zipkin", 20, 1000, new []{ "http://localhost:9092" });

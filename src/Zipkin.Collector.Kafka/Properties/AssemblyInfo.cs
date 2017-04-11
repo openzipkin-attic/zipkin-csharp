@@ -2,7 +2,4 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitleAttribute("Zipkin.Collector.Kafka")]
-[assembly: AssemblyProductAttribute("Zipkin")]
-[assembly: AssemblyDescriptionAttribute("A minimalistic .NET client library for Twitter Zipkin tracing.")]
 [assembly: InternalsVisibleToAttribute("Zipkin.Core.Tests")]

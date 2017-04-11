@@ -9,7 +9,9 @@ using System.Runtime.Serialization;
 
 namespace Zipkin
 {
+#if SERIALIZATION
     [Serializable]
+#endif
     public class ZipkinCollectorException : Exception
     {
         public ZipkinCollectorException()
@@ -24,10 +26,12 @@ namespace Zipkin
         {
         }
 
+#if SERIALIZATION
         protected ZipkinCollectorException(
             SerializationInfo info,
             StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }
