@@ -18,7 +18,7 @@ namespace Zipkin.Tracer.Tests
         {
             var annotation = new Annotation("value", DateTime.Now, new IPEndPoint(IPAddress.Any, 2222));
             var traceId = new TraceHeader(123, 234, 345, true);
-            var span = new Span(traceId, new IPEndPoint(IPAddress.Loopback, 1111), "service", "name");
+            var span = new Span(traceId, 42, new IPEndPoint(IPAddress.Loopback, 1111), "service", "name");
             span.Record(annotation);
 
             var thrifted = span.ToThrift();

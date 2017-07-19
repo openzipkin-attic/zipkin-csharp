@@ -12,7 +12,7 @@ namespace Zipkin
     /// <summary>
     /// A structure containing all of the data necessary to identify span and it's trace among others.
     /// </summary>
-    public struct TraceHeader : IEquatable<TraceHeader>, IComparable<TraceHeader>
+    public class TraceHeader : IEquatable<TraceHeader>, IComparable<TraceHeader>
     {
         /// <summary>
         /// Name of a HTTP header that could contain <see cref="TraceId"/> information encoded as hex string of 64-bit unsigned integer.
@@ -37,25 +37,25 @@ namespace Zipkin
         /// <summary>
         /// The overall ID of the trace. Every span in a trace will share this ID.
         /// </summary>
-        public readonly ulong TraceId;
+        public readonly long TraceId;
 
         /// <summary>
         /// The ID for a particular span. This may or may not be the same as the trace id.
         /// </summary>
-        public readonly ulong SpanId;
+        public readonly long SpanId;
 
         /// <summary>
         /// This is an optional ID that will only be present on child spans. 
         /// That is the span without a parent id is considered the root of the trace.
         /// </summary>
-        public readonly ulong? ParentId;
+        public readonly long? ParentId;
 
         /// <summary>
         /// Marks current span with debug flag.
         /// </summary>
         public readonly bool IsDebug;
 
-        public TraceHeader(ulong traceId, ulong spanId, ulong? parentId = null, bool isDebug = false)
+        public TraceHeader(long traceId, long spanId, long? parentId = null, bool isDebug = false)
         {
             TraceId = traceId;
             SpanId = spanId;
@@ -66,10 +66,13 @@ namespace Zipkin
         /// <summary>
         /// Creates a trace header for the new span being a child of the span identified by current trace header.
         /// </summary>
-        public TraceHeader Child(ulong childId) => new TraceHeader(TraceId, childId, SpanId, IsDebug);
+        public TraceHeader Child(long childId) => new TraceHeader(TraceId, childId, SpanId, IsDebug);
 
         public bool Equals(TraceHeader other)
         {
+            if (other == null)
+                return false;
+
             return other.TraceId == TraceId && other.SpanId == SpanId && other.ParentId == ParentId;
         }
 
@@ -91,6 +94,9 @@ namespace Zipkin
 
         public int CompareTo(TraceHeader other)
         {
+            if (other == null)
+                return 1;
+
             var tcmp = TraceId.CompareTo(other.TraceId);
             if (tcmp == 0)
             {

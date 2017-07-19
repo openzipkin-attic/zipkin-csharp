@@ -28,7 +28,8 @@ namespace Zipkin.Thrift
                 TraceId = (long)span.TraceHeader.TraceId,
                 Id = (long)span.TraceHeader.SpanId,
                 Name = span.Name,
-                Debug = span.TraceHeader.IsDebug
+                Debug = span.TraceHeader.IsDebug,
+                Duration = span.Duration
             };
 
             if (span.TraceHeader.ParentId.HasValue) s.ParentId = (long)span.TraceHeader.ParentId.Value;

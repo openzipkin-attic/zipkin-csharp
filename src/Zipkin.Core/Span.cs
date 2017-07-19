@@ -42,20 +42,39 @@ namespace Zipkin
         /// Endpoint, target span's service is listening on.
         /// </summary>
         public readonly IPEndPoint Endpoint;
-        
-        public Span(TraceHeader traceHeader, IPEndPoint endpoint, string serviceName = null, string name = null)
+
+        /// <summary>
+        /// Duration in Microseconds.
+        /// </summary>
+        public readonly long Duration;
+
+        public Span(TraceHeader header, 
+            long duration, 
+            IPEndPoint endpoint, 
+            string serviceName = null, 
+            string name = null) 
+            : this(header, 
+                  duration,
+                  endpoint,                  
+                  new List<Annotation>(),
+                  new List<BinaryAnnotation>(),
+                  serviceName ?? "Unknown",
+                  name ?? "Unknown")
         {
-            TraceHeader = traceHeader;
-            ServiceName = serviceName ?? "Unknown";
-            Name = name ?? "Unknown";
-            Annotations = new List<Annotation>();
-            BinaryAnnotations = new List<BinaryAnnotation>();
-            Endpoint = endpoint;
+           
         }
 
-        public Span(TraceHeader traceHeader, IPEndPoint endpoint, ICollection<Annotation> annotations, ICollection<BinaryAnnotation> binaryAnnotations, string serviceName, string name)
+        public Span(
+            TraceHeader header, 
+            long duration, 
+            IPEndPoint endpoint, 
+            ICollection<Annotation> annotations, 
+            ICollection<BinaryAnnotation> binaryAnnotations, 
+            string serviceName, 
+            string name)
         {
-            TraceHeader = traceHeader;
+            TraceHeader = header;
+            Duration = duration; 
             ServiceName = serviceName ?? "Unknown";
             Name = name ?? "Unknown";
             Annotations = annotations;
@@ -63,13 +82,13 @@ namespace Zipkin
             Endpoint = endpoint;
         }
 
-        public Span(TraceHeader traceHeader, string serviceName = null)
-            : this(traceHeader, new IPEndPoint(0, 0), serviceName)
+        public Span(TraceHeader traceHeader, long duration, string serviceName = null)
+            : this(traceHeader, duration, new IPEndPoint(0, 0), serviceName)
         {
         }
 
-        public Span(ulong traceId, ulong spanId, ulong? parentId = null)
-            : this(new TraceHeader(traceId, spanId, parentId, true), new IPEndPoint(0, 0))
+        public Span(long traceId, long duration, long spanId, long? parentId = null)
+            : this(new TraceHeader(traceId, spanId, parentId, true), duration, new IPEndPoint(0, 0))
         {
         }
 
